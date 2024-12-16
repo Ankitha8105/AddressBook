@@ -91,7 +91,7 @@ class AddressBookMain:
         
     def delete_contact_main(self):
         f_name = input("Enter First Name:")
-        l_name  = input("Enter Last Name")
+        l_name  = input("Enter Last Name:")
         
         self.address_book.delete_contact(f_name,l_name)
         
@@ -100,6 +100,7 @@ class AddressBookMain:
             print("\n--- Address Book ---")
             print("1. Add New Contact")
             print("2. Edit Contact")
+            print("3. Delete Contact")
             print("6. Display Contact")
             print("7.Exit")
     
@@ -110,7 +111,7 @@ class AddressBookMain:
             elif choice == "2":
                 self.edit_contact_from_console()
             elif choice == "3":
-                self
+                self.delete_contact_main()
             elif choice == "6":
                 self.address_book.display_contacts()
             elif choice =="7":
