@@ -6,6 +6,9 @@
     @Title : Address Book problem
 '''
 
+import log
+log = log.logger_init("Address Book")
+
 class Contact:
     def __init__(self,first_name,last_name,address,city,state,zip,phone_num,email):
         self.first_name = first_name
