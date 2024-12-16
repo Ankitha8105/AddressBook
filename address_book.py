@@ -1,10 +1,3 @@
-'''
-    @Author:Ankitha
-    @Date: 12-12-2024
-    @Last Modified by: Ankitha
-    @Last Modified time: 16-12-2024
-    @Title : Address Book problem
-'''
 import log
 log = log.logger_init("Address Book")
 
@@ -61,6 +54,14 @@ class AddressBook:
         else:
             log.info(f"Contact {key} not found in the address book.")
             print(f"Contact {first_name} {last_name} not found in the address book.")
+            
+    def search_by_city_or_state(self, city_name=None, state_name=None):
+        found_contacts = []
+        for contact in self.contacts.values():
+            if (city_name and contact.city.lower() == city_name.lower()) or \
+               (state_name and contact.state.lower() == state_name.lower()):
+                found_contacts.append(contact)
+        return found_contacts
 
     def display_contacts(self):
         if self.contacts:
@@ -92,7 +93,7 @@ class AddressBookMain:
     def select_address_book(self):
         print("\nAvailable Address Books:")
         for name in self.address_books:
-            print(f"- {name.capitalize()}")
+            print(f"{name}")
         book_name = input("Enter the name of the Address Book you want to manage: ").lower()
         if book_name in self.address_books:
             return self.address_books[book_name]
@@ -125,6 +126,34 @@ class AddressBookMain:
         f_name = input("Enter First Name: ")
         l_name = input("Enter Last Name: ")
         address_book.delete_contact(f_name, l_name)
+        
+    def city_or_state_search(self, address_book):
+        print("Search by: ")
+        print("1. City")
+        print("2. State")
+        choice = input("Enter your choice: ")
+        
+        if choice == "1":
+            city_name = input("Enter City Name to search: ")
+            found_contacts = address_book.search_by_city_or_state(city_name=city_name)
+            if found_contacts:
+                print("\nContacts found in the city:")
+                for contact in found_contacts:
+                    print(contact)
+            else:
+                print(f"No contacts found in city {city_name}.")
+                
+        elif choice == "2":
+            state_name = input("Enter State Name to search: ")
+            found_contacts = address_book.search_by_city_or_state(state_name=state_name)
+            if found_contacts:
+                print("\nContacts found in the state:")
+                for contact in found_contacts:
+                    print(contact)
+            else:
+                print(f"No contacts found in state {state_name}.")
+        else:
+            print("Invalid choice.")
 
     def run(self):
         while True:
@@ -151,8 +180,9 @@ class AddressBookMain:
             print("1. Add New Contact")
             print("2. Edit Contact")
             print("3. Delete Contact")
-            print("4. Display Contacts")
-            print("5. Exit to Main Menu")
+            print("4. Search by City or State")
+            print("5. Display Contacts")
+            print("6. Exit to Main Menu")
 
             choice = input("Enter your choice: ")
 
@@ -163,8 +193,10 @@ class AddressBookMain:
             elif choice == "3":
                 self.delete_contact_main(address_book)
             elif choice == "4":
-                address_book.display_contacts()
+                self.city_or_state_search(address_book)
             elif choice == "5":
+                address_book.display_contacts()
+            elif choice == "6":
                 break
             else:
                 print("Invalid choice. Please try again.")
