@@ -2,7 +2,7 @@
     @Author:Ankitha
     @Date: 12-12-2024
     @Last Modified by: Ankitha
-    @Last Modified time: 12-12-2024
+    @Last Modified time: 16-12-2024
     @Title : Address Book problem
 '''
 import log
@@ -27,64 +27,78 @@ class AddressBook:
         self.contacts = {}
 
     def add_contact(self, contact):
-        key = f"{contact.first_name} {contact.last_name}"
+        key = f"{contact.first_name} {contact.last_name}".lower()
         if key not in self.contacts:
             self.contacts[key] = contact
-            log.info(self.contacts.items())
             log.info(f"Contact {key} added successfully.")
+            print(f"Contact {contact.first_name} {contact.last_name} added successfully.")
         else:
             log.info(f"Contact {key} already exists in the address book.")
-    
+            print(f"Contact {contact.first_name} {contact.last_name} already exists in the address book.")
+
     def edit_contact(self, f_name, l_name):
-        key = f"{f_name} {l_name}"
+        key = f"{f_name} {l_name}".lower()
         if key not in self.contacts:
             log.info(f"{key} not found in Contacts")
+            print(f"Contact {f_name} {l_name} not found in the address book.")
         else:
+            print("Enter the new details for the contact:")
             self.contacts[key].address = input("Enter new address: ")
             self.contacts[key].city = input("Enter new city: ")
             self.contacts[key].state = input("Enter new state: ")
             self.contacts[key].zip_code = input("Enter new zipcode: ")
             self.contacts[key].phone = input("Enter new phone number: ")
             self.contacts[key].email = input("Enter new email: ")
-            
+            log.info(f"Contact {key} updated successfully.")
+            print(f"Contact {f_name} {l_name} updated successfully.")
+
     def delete_contact(self, first_name, last_name):
-        key = f"{first_name} {last_name}"
+        key = f"{first_name} {last_name}".lower()
         if key in self.contacts:
             del self.contacts[key]
+            log.info(f"Contact {key} deleted successfully.")
+            print(f"Contact {first_name} {last_name} deleted successfully.")
         else:
-            print(f"{key} is not present in the contact book")
+            log.info(f"Contact {key} not found in the address book.")
+            print(f"Contact {first_name} {last_name} not found in the address book.")
 
     def display_contacts(self):
         if self.contacts:
+            print("\nContacts in Address Book:")
             for contact in self.contacts.values():
                 log.info(contact)
+                print(contact)
         else:
             log.info("No contacts in the address book.")
+            print("No contacts in the address book.")
 
 class AddressBookMain:
     def __init__(self):
         self.address_books = {}
 
-    def display_menu(self):
+    def display(self):
         print("Welcome to Address Book Problem")
-
+        
     def create_address_book(self):
         book_name = input("Enter the name for the new Address Book: ")
-        if book_name not in self.address_books:
-            self.address_books[book_name] = AddressBook()
+        if book_name.lower() not in self.address_books:
+            self.address_books[book_name.lower()] = AddressBook()
             log.info(f"New Address Book '{book_name}' created successfully.")
+            print(f"New Address Book '{book_name}' created successfully.")
         else:
             log.info(f"Address Book '{book_name}' already exists.")
+            print(f"Address Book '{book_name}' already exists.")
 
     def select_address_book(self):
-        print("Available Address Books:")
+        print("\nAvailable Address Books:")
         for name in self.address_books:
-            print(f"- {name}")
-        book_name = input("Enter the name of the Address Book you want to manage: ")
+            print(f"- {name.capitalize()}")
+        book_name = input("Enter the name of the Address Book you want to manage: ").lower()
         if book_name in self.address_books:
             return self.address_books[book_name]
         else:
             log.info(f"Address Book '{book_name}' does not exist.")
+            print(f"Address Book '{book_name}' does not exist.")
             return None
 
     def add_contact_from_console(self, address_book):
@@ -105,7 +119,6 @@ class AddressBookMain:
         print("Enter the following details to edit a contact: ")
         f_name = input("Enter first name: ")
         l_name = input("Enter last name: ")
-
         address_book.edit_contact(f_name, l_name)
 
     def delete_contact_main(self, address_book):
@@ -158,4 +171,5 @@ class AddressBookMain:
 
 if __name__ == "__main__":
     address_main = AddressBookMain()
+    address_main.display()
     address_main.run()
