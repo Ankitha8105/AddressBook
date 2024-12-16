@@ -28,6 +28,7 @@ class AddressBook:
             log.info(f"Contact {key} added successfully.")
             print(f"Contact {contact.first_name} {contact.last_name} added successfully.")
 
+            # Update city and state dictionaries
             if contact.city.lower() not in self.city_dict:
                 self.city_dict[contact.city.lower()] = []
             self.city_dict[contact.city.lower()].append(contact)
@@ -64,6 +65,7 @@ class AddressBook:
             log.info(f"Contact {key} deleted successfully.")
             print(f"Contact {first_name} {last_name} deleted successfully.")
 
+            # Update city and state dictionaries
             if contact.city.lower() in self.city_dict:
                 self.city_dict[contact.city.lower()].remove(contact)
                 if not self.city_dict[contact.city.lower()]:
@@ -76,7 +78,7 @@ class AddressBook:
         else:
             log.info(f"Contact {key} not found in the address book.")
             print(f"Contact {first_name} {last_name} not found in the address book.")
-            
+
     def search_by_city_or_state(self, city_name=None, state_name=None):
         found_contacts = []
         if city_name:
@@ -90,6 +92,23 @@ class AddressBook:
                 found_contacts += self.state_dict[state_name]
         
         return found_contacts
+    
+    def number_of_persons(self, city_name=None, state_name=None):
+        city_count = 0
+        state_count = 0
+
+        if city_name:
+            city_name = city_name.lower()
+            if city_name in self.city_dict:
+                city_count = len(self.city_dict[city_name])
+        
+        if state_name:
+            state_name = state_name.lower()
+            if state_name in self.state_dict:
+                state_count = len(self.state_dict[state_name])
+
+        print(f"Number of contacts in city '{city_name}': {city_count}")
+        print(f"Number of contacts in state '{state_name}': {state_count}")
 
     def display_contacts(self):
         if self.contacts:
@@ -165,7 +184,7 @@ class AddressBookMain:
             city_name = input("Enter City Name to search: ")
             found_contacts = address_book.search_by_city_or_state(city_name=city_name)
             if found_contacts:
-                print("\nContacts found in the city:")
+                print(f"\n{len(found_contacts)} Contacts found in the city '{city_name}':")
                 for contact in found_contacts:
                     print(contact)
             else:
@@ -175,11 +194,25 @@ class AddressBookMain:
             state_name = input("Enter State Name to search: ")
             found_contacts = address_book.search_by_city_or_state(state_name=state_name)
             if found_contacts:
-                print("\nContacts found in the state:")
+                print(f"\n{len(found_contacts)} Contacts found in the state '{state_name}':")
                 for contact in found_contacts:
                     print(contact)
             else:
                 print(f"No contacts found in state {state_name}.")
+        else:
+            print("Invalid choice.")
+            
+    def count_city_or_states(self, address_book):
+        print("1. Count by City")
+        print("2. Count by State")
+        choice = input("Enter your choice: ")
+        
+        if choice == "1":
+            city_name = input("Enter city name to count: ")
+            address_book.number_of_persons(city_name=city_name)
+        elif choice == "2":
+            state_name = input("Enter state name to count: ")
+            address_book.number_of_persons(state_name=state_name)
         else:
             print("Invalid choice.")
 
@@ -210,7 +243,8 @@ class AddressBookMain:
             print("3. Delete Contact")
             print("4. Search by City or State")
             print("5. Display Contacts")
-            print("6. Exit to Main Menu")
+            print("6. Count Contacts by City or State")
+            print("7. Exit to Main Menu")
 
             choice = input("Enter your choice: ")
 
@@ -225,6 +259,8 @@ class AddressBookMain:
             elif choice == "5":
                 address_book.display_contacts()
             elif choice == "6":
+                self.count_city_or_states(address_book)
+            elif choice == "7":
                 break
             else:
                 print("Invalid choice. Please try again.")
