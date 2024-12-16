@@ -65,6 +65,9 @@ class AddressBook:
 class AddressBookMain:
     def __init__(self):
         self.address_book = AddressBook()
+        
+    def dispaly(self):
+        print("Welcome to address Book problem")
 
     def add_contact_from_console(self):
         print("Enter the following contact details:")
@@ -91,16 +94,14 @@ class AddressBookMain:
         
     def delete_contact_main(self):
         f_name = input("Enter First Name:")
-        l_name  = input("Enter Last Name:")
+        l_name  = input("Enter Last Name")
         
         self.address_book.delete_contact(f_name,l_name)
-        
     def run(self):
         while True:
             print("\n--- Address Book ---")
             print("1. Add New Contact")
             print("2. Edit Contact")
-            print("3. Delete Contact")
             print("6. Display Contact")
             print("7.Exit")
     
@@ -112,7 +113,7 @@ class AddressBookMain:
                 self.edit_contact_from_console()
             elif choice == "3":
                 self.delete_contact_main()
-            elif choice == "6":
+            elif choice == "4":
                 self.address_book.display_contacts()
             elif choice =="7":
                 break
@@ -122,4 +123,5 @@ class AddressBookMain:
 
 if __name__=="__main__":
     address_main = AddressBookMain()
+    address_main.display()
     address_main.run()
