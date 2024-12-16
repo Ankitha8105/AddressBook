@@ -5,7 +5,7 @@ def logger_init(name):
     logger = logging.getLogger(name)
     
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(acstime)s,%(name)s,%(levelname)s,%(message)s")
+    formatter = logging.Formatter("%(asctime)s,%(name)s,%(levelname)s,%(message)s")
     
     file_handler = logging.FileHandler("all.log")
     file_handler.setFormatter(formatter)
