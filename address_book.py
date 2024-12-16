@@ -46,6 +46,13 @@ class AddressBook:
             self.contacts[key].zip_code = input("Enter new zipcode: ")
             self.contacts[key].phone = input("Enter new phone number: ")
             self.contacts[key].email = input("Enter new email: ")
+            
+    def delete_contact(self,first_name,last_name):
+        key = f"{first_name} {last_name}"
+        if key in self.contacts:
+            del self.contacts[key]
+        else:
+            print(f"{key} is not present in contact book ")
 
     def display_contacts(self):
         if self.contacts:
@@ -81,7 +88,13 @@ class AddressBookMain:
         l_name = input("Enter last name: ")
 
         self.address_book.edit_contact(f_name,l_name)
-
+        
+    def delete_contact_main(self):
+        f_name = input("Enter First Name:")
+        l_name  = input("Enter Last Name")
+        
+        self.address_book.delete_contact(f_name,l_name)
+        
     def run(self):
         while True:
             print("\n--- Address Book ---")
@@ -96,6 +109,8 @@ class AddressBookMain:
                 self.add_contact_from_console()
             elif choice == "2":
                 self.edit_contact_from_console()
+            elif choice == "3":
+                self
             elif choice == "6":
                 self.address_book.display_contacts()
             elif choice =="7":
