@@ -1,3 +1,10 @@
+'''
+    @Author:Ankitha
+    @Date: 12-12-2024
+    @Last Modified by: Ankitha
+    @Last Modified time: 17-12-2024
+    @Title : Address Book problem
+'''
 import log
 log = log.logger_init("Address Book")
 
@@ -28,7 +35,6 @@ class AddressBook:
             log.info(f"Contact {key} added successfully.")
             print(f"Contact {contact.first_name} {contact.last_name} added successfully.")
 
-            # Update city and state dictionaries
             if contact.city.lower() not in self.city_dict:
                 self.city_dict[contact.city.lower()] = []
             self.city_dict[contact.city.lower()].append(contact)
