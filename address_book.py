@@ -158,7 +158,7 @@ class AddressBook:
             print(contact)
             
     def save_to_file(self, file_name):
-        with open(file_name, 'w') as file:
+        with open(file_name, 'a') as file:
             for contact in self.contacts.values():
                 file.write(str(contact) + '\n')
         print(f"All contacts have been saved to {file_name}")
