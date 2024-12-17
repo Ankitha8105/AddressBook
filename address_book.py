@@ -110,18 +110,43 @@ class AddressBook:
         print(f"Number of contacts in state '{state_name}': {state_count}")
         
     def sort_names(self):
-            if not self.contacts:
-                log.info("No contacts to sort in the address book.")
-                print("No contacts to sort.")
-                return
+        if not self.contacts:
+            log.info("No contacts to sort in the address book.")
+            print("No contacts to sort.")
+            return
             
-            sorted_contacts = sorted(self.contacts.values(), key=lambda c: (c.first_name.lower(), c.last_name.lower()))
+        sorted_contacts = sorted(self.contacts.values(), key=lambda c: (c.first_name.lower(), c.last_name.lower()))
 
-            log.info("Contacts sorted successfully.")
-            print("\nContacts sorted alphabetically by name:")
-            for contact in sorted_contacts:
-                print(contact)
+        log.info("Contacts sorted successfully.")
+        print("\nContacts sorted alphabetically by name:")
+        for contact in sorted_contacts:
+            print(contact)
+                
+    def sort_contacts(self, sort_by):
+        if not self.contacts:
+            log.info("No contacts to sort.")
+            print("No contacts to sort.")
+            return
 
+        if sort_by == "city":
+            sorted_contacts = sorted(self.contacts.values(), key=lambda c: c.city.lower())
+            log.info("Contacts sorted by City.")
+            print("\nContacts Sorted by City:")
+        elif sort_by == "state":
+            sorted_contacts = sorted(self.contacts.values(), key=lambda c: c.state.lower())
+            log.info("Contacts sorted by State.")
+            print("\nContacts Sorted by State:")
+        elif sort_by == "zip":
+            sorted_contacts = sorted(self.contacts.values(), key=lambda c: c.zip_code)
+            log.info("Contacts sorted by Zip Code.")
+            print("\nContacts Sorted by Zip Code:")
+        else:
+            print("Invalid sorting parameter. Choose city, state, or zip.")
+            return
+
+        for contact in sorted_contacts:
+            print(contact)
+            
     def display_contacts(self):
         if self.contacts:
             print("\nContacts in Address Book:")
@@ -227,7 +252,23 @@ class AddressBookMain:
             address_book.number_of_persons(state_name=state_name)
         else:
             print("Invalid choice.")
+            
+    def sort_contacts_menu(self, address_book):
+        print("\nSort Contacts By:")
+        print("1. City")
+        print("2. State")
+        print("3. Zip Code")
+        choice = input("Enter your choice : ")
 
+        if choice == "1":
+            address_book.sort_contacts("city")
+        elif choice == "2":
+            address_book.sort_contacts("state")
+        elif choice == "3":
+            address_book.sort_contacts("zip")
+        else:
+            print("Invalid choice. Please try again.")
+            
     def run(self):
         while True:
             print("\n--- Main Menu ---")
@@ -254,11 +295,11 @@ class AddressBookMain:
             print("2. Edit Contact")
             print("3. Delete Contact")
             print("4. Search by City or State")
-            print("5. Display Contacts")
-            print("6. Count Contacts by City or State")
-            print("7. Sort Contacts by Name")
-            print("8. Exit to Main Menu")
-
+            print("5. Count Contacts by City or State")
+            print("6. Sort Contacts by Name")
+            print("7. sort by city or state or zip")
+            print("8. Display Contacts")
+            print("9. Exit to Main Menu")
 
             choice = input("Enter your choice: ")
 
@@ -275,8 +316,10 @@ class AddressBookMain:
             elif choice == "6":
                 address_book.sort_names() 
             elif choice == "7":
-                address_book.display_contacts() 
+                self.sort_contacts_menu(address_book)
             elif choice == "8":
+                address_book.display_contacts() 
+            elif choice == "9":
                 break
             else:
                 print("Invalid choice. Please try again.")
