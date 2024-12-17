@@ -1,4 +1,5 @@
 import log
+import os
 log = log.logger_init("Address Book")
 
 class Contact:
@@ -13,7 +14,17 @@ class Contact:
         self.email = email
 
     def __str__(self):
-        return (f"{self.first_name} {self.last_name}, {self.address}, {self.city}, {self.state}, {self.zip_code}, {self.phone}, {self.email}")
+        return f"{self.first_name},{self.last_name},{self.address},{self.city},{self.state},{self.zip_code},{self.phone},{self.email}"
+
+    @staticmethod
+    def from_string(data):
+        details = data.strip().split(',')
+        if len(details) == 8:
+            return Contact(details[0], details[1], details[2], details[3], details[4], details[5], details[6],details[7])
+        else:
+            print(f"Skipping malformed line: {data.strip()}")
+            log.info(f"Skipping malformed line: {data.strip()}")
+            return None
 
 class AddressBook:
     def __init__(self):
@@ -28,7 +39,6 @@ class AddressBook:
             log.info(f"Contact {key} added successfully.")
             print(f"Contact {contact.first_name} {contact.last_name} added successfully.")
 
-            # Update city and state dictionaries
             if contact.city.lower() not in self.city_dict:
                 self.city_dict[contact.city.lower()] = []
             self.city_dict[contact.city.lower()].append(contact)
@@ -147,6 +157,25 @@ class AddressBook:
         for contact in sorted_contacts:
             print(contact)
             
+    def save_to_file(self, file_name):
+        with open(file_name, 'w') as file:
+            for contact in self.contacts.values():
+                file.write(str(contact) + '\n')
+        print(f"All contacts have been saved to {file_name}")
+        log.info(f"Contacts saved to file {file_name}.")
+
+    def load_from_file(self, file_name):
+        if not os.path.exists(file_name):
+            print(f"File '{file_name}' does not exist.")
+            return
+        with open(file_name, 'r') as file:
+            for line in file:
+                contact = Contact.from_string(line)
+                if contact:  
+                    self.add_contact(contact)
+        log.info(f"Contacts loaded from file {file_name}.")
+
+        
     def display_contacts(self):
         if self.contacts:
             print("\nContacts in Address Book:")
@@ -298,8 +327,10 @@ class AddressBookMain:
             print("5. Count Contacts by City or State")
             print("6. Sort Contacts by Name")
             print("7. sort by city or state or zip")
-            print("8. Display Contacts")
-            print("9. Exit to Main Menu")
+            print("8. Save Contacts to File")
+            print("9. Load Contacts from File")
+            print("10. Display Contacts")
+            print("11. Exit to Main Menu")
 
             choice = input("Enter your choice: ")
 
@@ -318,8 +349,14 @@ class AddressBookMain:
             elif choice == "7":
                 self.sort_contacts_menu(address_book)
             elif choice == "8":
-                address_book.display_contacts() 
+                file_name = input("Enter the file name to save contacts: ")
+                address_book.save_to_file(file_name)
             elif choice == "9":
+                file_name = input("Enter the file name to load contacts: ")
+                address_book.load_from_file(file_name)
+            elif choice == "10":
+                address_book.display_contacts() 
+            elif choice == "11":
                 break
             else:
                 print("Invalid choice. Please try again.")
