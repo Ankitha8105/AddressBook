@@ -71,7 +71,6 @@ class AddressBook:
             log.info(f"Contact {key} deleted successfully.")
             print(f"Contact {first_name} {last_name} deleted successfully.")
 
-            # Update city and state dictionaries
             if contact.city.lower() in self.city_dict:
                 self.city_dict[contact.city.lower()].remove(contact)
                 if not self.city_dict[contact.city.lower()]:
@@ -115,7 +114,7 @@ class AddressBook:
 
         print(f"Number of contacts in city '{city_name}': {city_count}")
         print(f"Number of contacts in state '{state_name}': {state_count}")
-
+        
     def display_contacts(self):
         if self.contacts:
             print("\nContacts in Address Book:")
