@@ -1,5 +1,6 @@
 import log
 import os
+import csv
 log = log.logger_init("Address Book")
 
 class Contact:
@@ -25,7 +26,14 @@ class Contact:
             print(f"Skipping malformed line: {data.strip()}")
             log.info(f"Skipping malformed line: {data.strip()}")
             return None
-
+    @staticmethod
+    def from_csv_row(row):
+        if len(row) == 8:
+            return Contact(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+        else:
+            log.info(f"Skipping malformed CSV row: {row}")
+            return None
+        
 class AddressBook:
     def __init__(self):
         self.contacts = {}
@@ -174,7 +182,28 @@ class AddressBook:
                 if contact:  
                     self.add_contact(contact)
         log.info(f"Contacts loaded from file {file_name}.")
+        
+    def save_to_csv(self, file_name):
+        with open(file_name, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["First Name", "Last Name", "Address", "City", "State", "Zip Code", "Phone", "Email"])
+            for contact in self.contacts.values():
+                writer.writerow([contact.first_name, contact.last_name, contact.address, contact.city, contact.state, contact.zip_code, contact.phone, contact.email])
+        print(f"All contacts have been saved to CSV file {file_name}")
+        log.info(f"Contacts saved to CSV file {file_name}.")
 
+    def load_from_csv(self, file_name):
+        if not os.path.exists(file_name):
+            print(f"File '{file_name}' does not exist.")
+            return
+        with open(file_name, mode='r') as file:
+            reader = csv.reader(file)
+            next(reader)  
+            for row in reader:
+                contact = Contact.from_csv_row(row)
+                if contact:
+                    self.add_contact(contact)
+        log.info(f"Contacts loaded from CSV file {file_name}.")
         
     def display_contacts(self):
         if self.contacts:
@@ -329,8 +358,10 @@ class AddressBookMain:
             print("7. sort by city or state or zip")
             print("8. Save Contacts to File")
             print("9. Load Contacts from File")
-            print("10. Display Contacts")
-            print("11. Exit to Main Menu")
+            print("10. Save Contacts to CSV File")
+            print("11. Load Contacts CSV File")
+            print("12. Display Contacts")
+            print("13. Exit to Main Menu")
 
             choice = input("Enter your choice: ")
 
@@ -355,8 +386,14 @@ class AddressBookMain:
                 file_name = input("Enter the file name to load contacts: ")
                 address_book.load_from_file(file_name)
             elif choice == "10":
-                address_book.display_contacts() 
+                file_name = input("Enter the CSV file name to save contacts: ")
+                address_book.save_to_csv(file_name)
             elif choice == "11":
+                file_name = input("Enter the CSV file name to load contacts: ")
+                address_book.load_from_csv(file_name)
+            elif choice == "12":
+                address_book.display_contacts() 
+            elif choice == "13":
                 break
             else:
                 print("Invalid choice. Please try again.")
