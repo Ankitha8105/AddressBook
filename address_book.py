@@ -65,7 +65,6 @@ class AddressBook:
             log.info(f"Contact {key} deleted successfully.")
             print(f"Contact {first_name} {last_name} deleted successfully.")
 
-            # Update city and state dictionaries
             if contact.city.lower() in self.city_dict:
                 self.city_dict[contact.city.lower()].remove(contact)
                 if not self.city_dict[contact.city.lower()]:
@@ -109,6 +108,19 @@ class AddressBook:
 
         print(f"Number of contacts in city '{city_name}': {city_count}")
         print(f"Number of contacts in state '{state_name}': {state_count}")
+        
+    def sort_names(self):
+            if not self.contacts:
+                log.info("No contacts to sort in the address book.")
+                print("No contacts to sort.")
+                return
+            
+            sorted_contacts = sorted(self.contacts.values(), key=lambda c: (c.first_name.lower(), c.last_name.lower()))
+
+            log.info("Contacts sorted successfully.")
+            print("\nContacts sorted alphabetically by name:")
+            for contact in sorted_contacts:
+                print(contact)
 
     def display_contacts(self):
         if self.contacts:
@@ -244,7 +256,9 @@ class AddressBookMain:
             print("4. Search by City or State")
             print("5. Display Contacts")
             print("6. Count Contacts by City or State")
-            print("7. Exit to Main Menu")
+            print("7. Sort Contacts by Name")
+            print("8. Exit to Main Menu")
+
 
             choice = input("Enter your choice: ")
 
@@ -257,10 +271,12 @@ class AddressBookMain:
             elif choice == "4":
                 self.city_or_state_search(address_book)
             elif choice == "5":
-                address_book.display_contacts()
-            elif choice == "6":
                 self.count_city_or_states(address_book)
+            elif choice == "6":
+                address_book.sort_names() 
             elif choice == "7":
+                address_book.display_contacts() 
+            elif choice == "8":
                 break
             else:
                 print("Invalid choice. Please try again.")
