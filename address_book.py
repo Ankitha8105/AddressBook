@@ -254,9 +254,9 @@ class AddressBookMain:
             print("2. Edit Contact")
             print("3. Delete Contact")
             print("4. Search by City or State")
-            print("5. Display Contacts")
-            print("6. Count Contacts by City or State")
-            print("7. Sort Contacts by Name")
+            print("5. Count Contacts by City or State")
+            print("6. Sort Contacts by Name")
+            print("7. Display Contacts")
             print("8. Exit to Main Menu")
 
 
