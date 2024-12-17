@@ -1,6 +1,14 @@
+'''
+    @Author:Ankitha
+    @Date: 12-12-2024
+    @Last Modified by: Ankitha
+    @Last Modified time: 17-12-2024
+    @Title : Address Book problem
+'''
 import log
 import os
 import csv
+import json
 log = log.logger_init("Address Book")
 
 class Contact:
@@ -33,6 +41,31 @@ class Contact:
         else:
             log.info(f"Skipping malformed CSV row: {row}")
             return None
+        
+    def to_dict(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "address": self.address,
+            "city": self.city,
+            "state": self.state,
+            "zip_code": self.zip_code,
+            "phone": self.phone,
+            "email": self.email
+        }
+        
+    @staticmethod
+    def from_dict(contact_dict):
+        return Contact(
+            contact_dict['first_name'], 
+            contact_dict['last_name'], 
+            contact_dict['address'], 
+            contact_dict['city'], 
+            contact_dict['state'], 
+            contact_dict['zip_code'], 
+            contact_dict['phone'], 
+            contact_dict['email']
+        )
         
 class AddressBook:
     def __init__(self):
@@ -205,6 +238,24 @@ class AddressBook:
                     self.add_contact(contact)
         log.info(f"Contacts loaded from CSV file {file_name}.")
         
+    def save_to_json(self, file_name):
+        with open(file_name, 'w') as file:
+            contact_list = [contact.to_dict() for contact in self.contacts.values()]
+            json.dump(contact_list, file, indent=4)
+        print(f"Contacts saved to JSON file {file_name}.")
+        log.info(f"Contacts saved to JSON file {file_name}.")
+
+    def load_from_json(self, file_name):
+        if not os.path.exists(file_name):
+            print(f"File '{file_name}' does not exist.")
+            return
+        with open(file_name, 'r') as file:
+            contact_list = json.load(file)
+            for contact_dict in contact_list:
+                contact = Contact.from_dict(contact_dict)
+                self.add_contact(contact)
+        log.info(f"Contacts loaded from JSON file {file_name}.")
+                 
     def display_contacts(self):
         if self.contacts:
             print("\nContacts in Address Book:")
@@ -356,12 +407,14 @@ class AddressBookMain:
             print("5. Count Contacts by City or State")
             print("6. Sort Contacts by Name")
             print("7. sort by city or state or zip")
-            print("8. Save Contacts to File")
-            print("9. Load Contacts from File")
-            print("10. Save Contacts to CSV File")
-            print("11. Load Contacts CSV File")
-            print("12. Display Contacts")
-            print("13. Exit to Main Menu")
+            print("8. Display Contacts")
+            print("9. Save Contacts to File")
+            print("10. Load Contacts from File")
+            print("11. Save Contacts to CSV File")
+            print("12. Load Contacts CSV File")
+            print("13. Save Contacts to JSON File")
+            print("14. Load Contacts from JSON File")
+            print("15. Exit to Main Menu")
 
             choice = input("Enter your choice: ")
 
@@ -380,20 +433,26 @@ class AddressBookMain:
             elif choice == "7":
                 self.sort_contacts_menu(address_book)
             elif choice == "8":
+                address_book.display_contacts()
+            elif choice == "9":
                 file_name = input("Enter the file name to save contacts: ")
                 address_book.save_to_file(file_name)
-            elif choice == "9":
+            elif choice == "10":
                 file_name = input("Enter the file name to load contacts: ")
                 address_book.load_from_file(file_name)
-            elif choice == "10":
+            elif choice == "11":
                 file_name = input("Enter the CSV file name to save contacts: ")
                 address_book.save_to_csv(file_name)
-            elif choice == "11":
+            elif choice == "12":
                 file_name = input("Enter the CSV file name to load contacts: ")
                 address_book.load_from_csv(file_name)
-            elif choice == "12":
-                address_book.display_contacts() 
             elif choice == "13":
+                file_name = input("Enter the JSON file name to save contacts: ")
+                address_book.save_to_json(file_name)
+            elif choice == "14":
+                file_name = input("Enter the JSON file name to load contacts: ")
+                address_book.load_from_json(file_name) 
+            elif choice == "15":
                 break
             else:
                 print("Invalid choice. Please try again.")
